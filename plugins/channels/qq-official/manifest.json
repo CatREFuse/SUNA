@@ -1,0 +1,44 @@
+{
+  "id": "suna-qq-official",
+  "name": "QQ 官方机器人",
+  "version": "0.1.1",
+  "apiVersion": 1,
+  "kind": "channel",
+  "protocol": "onebot-11",
+  "entry": "index.mjs",
+  "platform": "qq-openid",
+  "description": "QQ 开放平台机器人：签名 Webhook 接收、C2C / 群聊文本回复；需要平台配置回调地址。",
+  "capabilities": [
+    "private",
+    "group",
+    "webhook"
+  ],
+  "configSchema": {
+    "appId": {
+      "type": "string",
+      "label": "App ID",
+      "required": true
+    },
+    "appSecret": {
+      "type": "secret",
+      "label": "App Secret",
+      "required": true
+    },
+    "apiUrl": {
+      "type": "string",
+      "label": "API 地址",
+      "default": "https://api.sgroup.qq.com"
+    },
+    "tokenUrl": {
+      "type": "string",
+      "label": "Token 地址",
+      "default": "https://bots.qq.com/app/getAppAccessToken"
+    }
+  },
+  "administratorProtocol": {
+    "version": 1,
+    "field": "administratorUid",
+    "scope": "character-account",
+    "managedBy": "host"
+  }
+}

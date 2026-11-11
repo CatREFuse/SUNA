@@ -1,0 +1,37 @@
+{
+  "id": "suna-weixin-official",
+  "name": "微信官方 AI Bot · iLink",
+  "version": "0.1.1",
+  "apiVersion": 1,
+  "kind": "channel",
+  "protocol": "onebot-11",
+  "entry": "index.mjs",
+  "platform": "weixin-ilink",
+  "description": "微信个人端 ClawBot / iLink：扫码绑定、长轮询收取消息、携带会话上下文回复。首版支持文本私聊。",
+  "capabilities": [
+    "private",
+    "login-qr",
+    "polling"
+  ],
+  "configSchema": {
+    "apiUrl": {
+      "type": "string",
+      "label": "iLink API 地址",
+      "default": "https://ilinkai.weixin.qq.com"
+    },
+    "botId": {
+      "type": "string",
+      "label": "Bot ID（扫码后自动保存）"
+    },
+    "botToken": {
+      "type": "secret",
+      "label": "Bot Token（扫码后自动保存）"
+    }
+  },
+  "administratorProtocol": {
+    "version": 1,
+    "field": "administratorUid",
+    "scope": "character-account",
+    "managedBy": "host"
+  }
+}

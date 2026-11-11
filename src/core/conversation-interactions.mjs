@@ -1,0 +1,38 @@
+import {randomUUID} from 'node:crypto';
+import {credentialKey} from './role-credential-store.mjs';
+const fail=(code,message)=>{throw Object.assign(new Error(message),{code});};
+const object=value=>value&&typeof value==='object'&&!Array.isArray(value)&&Object.getPrototypeOf(value)===Object.prototype;
+const text=(value,max=2000)=>typeof value==='string'&&value.trim()&&value.length<=max&&!/[\x00-\x08\x0b\x0c\x0e-\x1f]/.test(value);
+const fields=(value,allowed)=>object(value)&&Object.keys(value).every(key=>allowed.includes(key));
+export const INTERACTION_TOOLS={
+ ask:{description:'向当前本地会话的用户提出单选或多选问题，始终允许自定义回答。立即返回，不等待用户回答、不终止本轮；卡片长期保留，用户回答时题目和答案一起作为新的用户消息。',parameters:{type:'object',properties:{question:{type:'string'},multiple:{type:'boolean'},options:{type:'array',items:{type:'string'}}},required:['question','options'],additionalProperties:false},terminate:false},
+ request_credentials:{description:'在当前本地会话创建凭证表单，fields可有多个text或password字段。key为角色内稳定业务键。立即返回，值绝不作为工具结果或消息回传；仅回传key和保存状态，业务须从Host凭证端口按授权读取，不能要求用户在聊天粘贴凭证。',parameters:{type:'object',properties:{title:{type:'string'},fields:{type:'array',items:{type:'object',properties:{key:{type:'string'},label:{type:'string'},type:{type:'string',enum:['text','password']},required:{type:'boolean'}},required:['key','label','type'],additionalProperties:false}}},required:['title','fields'],additionalProperties:false},terminate:false},
+};
+export function validateInteraction(kind,args){
+ if(kind==='ask'){if(!fields(args,['question','options','multiple'])||!text(args.question)||args.multiple!==undefined&&typeof args.multiple!=='boolean'||!Array.isArray(args.options)||!args.options.length||args.options.length>64||args.options.some(v=>!text(v,500))||new Set(args.options).size!==args.options.length)fail('INTERACTION_INVALID','问题或选项无效');return {question:args.question,multiple:args.multiple===true,options:args.options.map((label,index)=>({id:String(index),label}))};}
+ if(kind==='request_credentials'){if(!fields(args,['title','fields'])||!text(args.title,200)||!Array.isArray(args.fields)||!args.fields.length||args.fields.length>64||args.fields.some(v=>!fields(v,['key','label','type','required'])||!credentialKey(v.key)||!text(v.label,200)||!['text','password'].includes(v.type)||v.required!==undefined&&typeof v.required!=='boolean')||new Set(args.fields.map(v=>v.key)).size!==args.fields.length)fail('INTERACTION_INVALID','凭证字段无效');return {title:args.title,fields:args.fields.map(v=>({...v,required:v.required!==false}))};}
+ fail('INTERACTION_INVALID','交互类型无效');
+}
+export function createConversationInteractions({read,put,list=()=>[],transaction,append,patch,findMessage,validateScope,credentials,respond,changed=()=>{},clock=()=>new Date().toISOString()}){
+ function current({conversationId,id}){const row=read('interaction',id);if(!row||row.conversationId!==conversationId)fail('INTERACTION_NOT_FOUND','问题不存在');validateScope(row);if(!findMessage(row.messageId,row.conversationId))fail('INTERACTION_EXPIRED','问题已移除');return row;}
+ function view(row){return {id:row.id,kind:row.kind,status:row.status,version:row.version,characterId:row.characterId,conversationId:row.conversationId,...row.form,...(row.answer?{answer:row.answer}:{}),...(row.savedKeys?{savedKeys:row.savedKeys}:{})};}
+ function update(row,patches){const next=put('interaction',row.id,{...row,...patches,version:row.version+1});const message=findMessage(row.messageId,row.conversationId);if(message)patch(message,{interaction:view(next)});changed(row.conversationId);return next;}
+ function create({kind,args,characterId,conversationId,runId,triggerId,assertCurrent}){assertCurrent();const form=validateInteraction(kind,args),row={id:'interaction_'+randomUUID(),kind,characterId,conversationId,runId,triggerId,form,status:'pending',version:1,createdAt:clock()};validateScope(row);return transaction(()=>{assertCurrent();const message=append({conversationId,text:kind==='ask'?form.question:form.title,interaction:view(row),role:'assistant',sender:{type:'character',id:characterId},source:{type:'interaction'},runId,dispatchEligible:false});row.messageId=message.id;put('interaction',row.id,row);return {status:'pending',id:row.id,...(kind==='request_credentials'?{keys:form.fields.map(v=>v.key)}:{})};});}
+ function get(input){return view(current(input));}
+ async function submit(input){
+  if(!fields(input,['conversationId','id','expectedVersion','selected','custom','values','credentialVersion']))fail('INTERACTION_INVALID','提交参数无效');let row=current(input);
+  if(!Number.isSafeInteger(input.expectedVersion)||input.expectedVersion!==row.version)fail('VERSION_CONFLICT','问题已更新，请重新读取');if(row.status!=='pending')fail('INTERACTION_CLOSED','问题已处理');
+  if(row.kind==='ask'){
+   if(input.values!==undefined||input.credentialVersion!==undefined||!Array.isArray(input.selected)||input.selected.some(v=>typeof v!=='string'||!row.form.options.some(o=>o.id===v))||new Set(input.selected).size!==input.selected.length||!row.form.multiple&&(input.selected.length>1||input.selected.length&&input.custom?.trim())||input.custom!==undefined&&(typeof input.custom!=='string'||input.custom.length>5000)||!input.selected.length&&!input.custom?.trim())fail('INTERACTION_INVALID','请选择选项或填写回答');
+   const selected=row.form.options.filter(o=>input.selected.includes(o.id)).map(o=>o.label),answer={selected,custom:input.custom?.trim()??''},content=`问题：${row.form.question}\n回答：${[...selected,...(answer.custom?[answer.custom]:[])].join('；')}`;
+   // respond persists and deduplicates synchronously inside the same transaction;
+   // dispatch is scheduled after commit and never waits for a role response.
+   return transaction(()=>{row=current(input);if(row.version!==input.expectedVersion||row.status!=='pending')fail('VERSION_CONFLICT','问题已更新，请重新读取');const receipt=respond({row,content});row=update(row,{status:'answered',answer,responseMessageId:receipt.messageId});return {interaction:view(row),messageId:receipt.messageId};});
+  }
+  if(input.selected!==undefined||input.custom!==undefined||!object(input.values)||Object.keys(input.values).some(key=>!row.form.fields.some(f=>f.key===key))||row.form.fields.some(f=>f.required&&!(typeof input.values[f.key]==='string'&&input.values[f.key].length))||Object.values(input.values).some(v=>typeof v!=='string'||v.length>16384))fail('CREDENTIAL_INPUT_INVALID','请填写凭证字段');
+  const values=Object.fromEntries(Object.entries(input.values).filter(([,v])=>v.length));try{return credentials.writeAtomically({characterId:row.characterId,values,expectedVersion:input.credentialVersion},saved=>transaction(()=>{row=current(input);if(row.version!==input.expectedVersion||row.status!=='pending')fail('VERSION_CONFLICT','表单已更新，请重新读取');row=update(row,{status:'saved',savedKeys:saved.keys});const receipt=respond({row,content:`凭证已保存：${saved.keys.join('、')}`});return {interaction:view(row),messageId:receipt.messageId};}));}finally{for(const key of Object.keys(input.values))delete input.values[key];}
+ }
+ function cancel(input){if(!fields(input,['conversationId','id','expectedVersion']))fail('INTERACTION_INVALID','取消参数无效');return transaction(()=>{const row=current(input);if(row.version!==input.expectedVersion||row.status!=='pending')fail('VERSION_CONFLICT','问题已更新，请重新读取');return view(update(row,{status:'cancelled'}));});}
+ function revalidate(characterId){for(const row of list('interaction').filter(r=>r.status==='pending'&&(!characterId||r.characterId===characterId)))try{current({conversationId:row.conversationId,id:row.id});}catch{if(findMessage(row.messageId,row.conversationId))transaction(()=>update(row,{status:'cancelled'}));}}
+ return {create,get,submit,cancel,view,revalidate};
+}

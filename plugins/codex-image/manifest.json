@@ -1,0 +1,207 @@
+{
+  "kind": "tool",
+  "apiVersion": 1,
+  "runtime": "node",
+  "id": "suna-codex-image",
+  "name": "本机 Codex 生图",
+  "version": "0.2.0",
+  "entry": "index.mjs",
+  "capabilities": [
+    "image.generate"
+  ],
+  "tools": [
+    {
+      "name": "suna_generate_image",
+      "description": "Generate an image from a prompt and optional real accessible image references. Returned media must be sent with send_message; this tool does not send messages.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "1024x1024",
+              "1024x1536",
+              "1536x1024",
+              "auto"
+            ]
+          },
+          "quality": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "auto"
+            ]
+          },
+          "references": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "media",
+                    "workbench"
+                  ]
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            }
+          }
+        },
+        "required": [
+          "prompt"
+        ]
+      },
+      "terminate": false,
+      "timeoutMs": 600000
+    },
+    {
+      "name": "suna_selfie",
+      "description": "Generate a new selfie using the current character identity reference library; fails when the library is absent. Does not replace get_selfie or send messages.",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20000
+          },
+          "size": {
+            "type": "string",
+            "enum": [
+              "1024x1024",
+              "1024x1536",
+              "1536x1024",
+              "auto"
+            ]
+          },
+          "quality": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "auto"
+            ]
+          },
+          "references": {
+            "type": "array",
+            "maxItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "media",
+                    "workbench"
+                  ]
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024
+                }
+              },
+              "required": [
+                "kind"
+              ]
+            }
+          }
+        },
+        "required": [
+          "prompt"
+        ]
+      },
+      "terminate": false,
+      "timeoutMs": 600000
+    }
+  ],
+  "configSchema": {
+    "textModelId": {
+      "type": "text",
+      "label": "请求模型",
+      "default": "gpt-6.1-sol"
+    },
+    "size": {
+      "type": "select",
+      "label": "尺寸偏好",
+      "default": "1024x1024",
+      "options": [
+        {
+          "value": "1024x1024",
+          "label": "1024x1024"
+        },
+        {
+          "value": "1024x1536",
+          "label": "1024x1536"
+        },
+        {
+          "value": "1536x1024",
+          "label": "1536x1024"
+        },
+        {
+          "value": "auto",
+          "label": "auto"
+        }
+      ]
+    },
+    "quality": {
+      "type": "select",
+      "label": "画质偏好",
+      "default": "high",
+      "options": [
+        {
+          "value": "low",
+          "label": "low"
+        },
+        {
+          "value": "medium",
+          "label": "medium"
+        },
+        {
+          "value": "high",
+          "label": "high"
+        },
+        {
+          "value": "auto",
+          "label": "auto"
+        }
+      ]
+    }
+  },
+  "files": {
+    "index.mjs": "6daa599ef0778dd0571d59ee7f379b6f572a46e5339ec22ebd005b242254e06e"
+  },
+  "description": "通过本机 Codex 生成图片和角色自拍。使用本机 Codex 的登录状态。"
+}

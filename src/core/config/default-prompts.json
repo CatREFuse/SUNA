@@ -1,0 +1,491 @@
+{
+  "schema": "suna.default-prompts",
+  "version": 1,
+  "source": {
+    "kind": "generic-defaults",
+    "version": 1
+  },
+  "entries": [
+    {
+      "scope": "runtime",
+      "name": "system",
+      "label": "system",
+      "content": "You are {{character_name}}, an assistant in this application. Follow the supplied profile, state, and conversation context. Use only tools enabled for this turn. Do not claim that an action succeeded until a tool confirms it. Respect the application permissions and the user’s choices.",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Base instructions for a role."
+      }
+    },
+    {
+      "scope": "runtime",
+      "name": "dev",
+      "label": "dev",
+      "content": "",
+      "metadata": {
+        "enabled": false,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Optional developer instructions."
+      }
+    },
+    {
+      "scope": "runtime",
+      "name": "user_input",
+      "label": "user_input",
+      "content": "<system_time>{{system_time}}</system_time>\n<state_updated>{{state_updated}}</state_updated>\n<work_memory_updated>{{work_memory_updated}}</work_memory_updated>\n<recalled_memories>{{recalled_memories}}</recalled_memories>\n<message_context>{{message_context}}</message_context>\n<user_input>{{user_input}}</user_input>",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Current turn input and context."
+      }
+    },
+    {
+      "scope": "tool",
+      "name": "send_message",
+      "label": "send_message",
+      "content": "Send a visible message to the current conversation.",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "runtime-checked",
+        "description": "Send a visible message to the current conversation.",
+        "terminate": false
+      }
+    },
+    {
+      "scope": "tool",
+      "name": "cron",
+      "label": "cron",
+      "content": "Manage an authorized scheduled task.",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "runtime-checked",
+        "description": "Manage an authorized scheduled task."
+      }
+    },
+    {
+      "scope": "tool",
+      "name": "websearch",
+      "label": "websearch",
+      "content": "Use the websearch capability when it is available and appropriate.",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "runtime-checked",
+        "description": "Use the websearch capability when it is available and appropriate."
+      }
+    },
+    {
+      "scope": "tool",
+      "name": "screenshot",
+      "label": "screenshot",
+      "content": "Use the screenshot capability when it is available and appropriate.",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "runtime-checked",
+        "description": "Use the screenshot capability when it is available and appropriate."
+      }
+    },
+    {
+      "scope": "tool",
+      "name": "recall_memory",
+      "label": "recall_memory",
+      "content": "Search stored memories for information relevant to the query.",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "runtime-checked",
+        "description": "Search stored memories for information relevant to the query."
+      }
+    },
+    {
+      "scope": "tool",
+      "name": "interact_env",
+      "label": "interact_env",
+      "content": "Use an available environment interaction.",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "runtime-checked",
+        "description": "Use an available environment interaction."
+      }
+    },
+    {
+      "scope": "tool",
+      "name": "image_gen",
+      "label": "image_gen",
+      "content": "Generate an image when the configured image service is available.",
+      "metadata": {
+        "enabled": false,
+        "handlerAvailability": "runtime-checked",
+        "description": "Generate an image when the configured image service is available."
+      }
+    },
+    {
+      "scope": "tool",
+      "name": "update_emotion",
+      "label": "update_emotion",
+      "content": "Update the role state using current conversation evidence.",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "runtime-checked",
+        "description": "Update the role state using current conversation evidence."
+      }
+    },
+    {
+      "scope": "tool",
+      "name": "add_work_memory",
+      "label": "add_work_memory",
+      "content": "Save a concise memory supported by the current conversation.",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "runtime-checked",
+        "description": "Save a concise memory supported by the current conversation."
+      }
+    },
+    {
+      "scope": "tool",
+      "name": "webfetch",
+      "label": "webfetch",
+      "content": "Read a web page when the configured fetch service is available.",
+      "metadata": {
+        "enabled": false,
+        "handlerAvailability": "runtime-checked",
+        "description": "Read a web page when the configured fetch service is available."
+      }
+    },
+    {
+      "scope": "tool",
+      "name": "get_selfie",
+      "label": "get_selfie",
+      "content": "Request an image through the configured image feature.",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "runtime-checked",
+        "description": "Request an image through the configured image feature."
+      }
+    },
+    {
+      "scope": "worker",
+      "name": "work_memory_convolution",
+      "label": "work_memory_convolution",
+      "content": "{\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Consolidate supplied memory records without adding unsupported facts. Return a result that matches the requested response format.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Input: {{worker_input}}\"\n    }\n  ],\n  \"response_format\": {\n    \"type\": \"text\"\n  }\n}",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Consolidate supplied memory records without adding unsupported facts.",
+        "executionRequiresRuntimeHandler": true
+      }
+    },
+    {
+      "scope": "worker",
+      "name": "dream",
+      "label": "dream",
+      "content": "{\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Create a fictional dream based on the supplied context. Return a result that matches the requested response format.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Input: {{worker_input}}\"\n    }\n  ],\n  \"response_format\": {\n    \"type\": \"text\"\n  }\n}",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Create a fictional dream based on the supplied context.",
+        "executionRequiresRuntimeHandler": true
+      }
+    },
+    {
+      "scope": "worker",
+      "name": "persona_dream",
+      "label": "persona_dream",
+      "content": "{\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Suggest cautious trait or habit updates grounded in supplied interactions. Return a result that matches the requested response format.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Input: {{worker_input}}\"\n    }\n  ],\n  \"response_format\": {\n    \"type\": \"json_schema\"\n  }\n}",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Suggest cautious trait or habit updates grounded in supplied interactions.",
+        "executionRequiresRuntimeHandler": true
+      }
+    },
+    {
+      "scope": "worker",
+      "name": "memory_dream",
+      "label": "memory_dream",
+      "content": "{\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Produce a fictional dream from the supplied memories; label fiction clearly. Return a result that matches the requested response format.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Input: {{worker_input}}\"\n    }\n  ],\n  \"response_format\": {\n    \"type\": \"json_schema\"\n  }\n}",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Produce a fictional dream from the supplied memories; label fiction clearly.",
+        "executionRequiresRuntimeHandler": true
+      }
+    },
+    {
+      "scope": "worker",
+      "name": "diary",
+      "label": "diary",
+      "content": "{\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Write a concise diary entry from supplied completed conversations. Return a result that matches the requested response format.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Input: {{worker_input}}\"\n    }\n  ],\n  \"response_format\": {\n    \"type\": \"json_schema\"\n  }\n}",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Write a concise diary entry from supplied completed conversations.",
+        "executionRequiresRuntimeHandler": true
+      }
+    },
+    {
+      "scope": "worker",
+      "name": "tone",
+      "label": "tone",
+      "content": "{\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Identify a concise tone adjustment for the current response. Return a result that matches the requested response format.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Input: {{worker_input}}\"\n    }\n  ],\n  \"response_format\": {\n    \"type\": \"text\"\n  }\n}",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Identify a concise tone adjustment for the current response.",
+        "executionRequiresRuntimeHandler": true
+      }
+    },
+    {
+      "scope": "worker",
+      "name": "speech",
+      "label": "speech",
+      "content": "{\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Convert supplied text for speech output. Return a result that matches the requested response format.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Input: {{worker_input}}\"\n    }\n  ],\n  \"response_format\": {\n    \"type\": \"text\"\n  }\n}",
+      "metadata": {
+        "enabled": false,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Convert supplied text for speech output.",
+        "executionRequiresRuntimeHandler": true,
+        "disabledReason": "No speech service is configured by default."
+      }
+    },
+    {
+      "scope": "worker",
+      "name": "env_update",
+      "label": "env_update",
+      "content": "{\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Summarize changes in the role environment using only supplied facts. Return a result that matches the requested response format.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Input: {{worker_input}}\"\n    }\n  ],\n  \"response_format\": {\n    \"type\": \"json_schema\"\n  }\n}",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Summarize changes in the role environment using only supplied facts.",
+        "executionRequiresRuntimeHandler": true
+      }
+    },
+    {
+      "scope": "worker",
+      "name": "emotion_update",
+      "label": "emotion_update",
+      "content": "{\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Summarize the current emotional state using only the supplied recent messages. Return a result that matches the requested response format.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Input: {{worker_input}}\"\n    }\n  ],\n  \"response_format\": {\n    \"type\": \"json_schema\"\n  }\n}",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Summarize the current emotional state using only the supplied recent messages.",
+        "executionRequiresRuntimeHandler": true
+      }
+    },
+    {
+      "scope": "worker",
+      "name": "associate_memory",
+      "label": "associate_memory",
+      "content": "{\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Find supported relationships among the supplied memories. Return a result that matches the requested response format.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Input: {{worker_input}}\"\n    }\n  ],\n  \"response_format\": {\n    \"type\": \"text\"\n  }\n}",
+      "metadata": {
+        "enabled": true,
+        "handlerAvailability": "not-asserted-by-configuration",
+        "description": "Find supported relationships among the supplied memories.",
+        "executionRequiresRuntimeHandler": true
+      }
+    }
+  ],
+  "variables": [
+    {
+      "name": "character_name",
+      "placeholder": "{{character_name}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "persona_immutable",
+      "placeholder": "{{persona_immutable}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "persona_mutable",
+      "placeholder": "{{persona_mutable}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "backgrounds",
+      "placeholder": "{{backgrounds}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "temper",
+      "placeholder": "{{temper}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "trait",
+      "placeholder": "{{trait}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "habit",
+      "placeholder": "{{habit}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "dialogue",
+      "placeholder": "{{dialogue}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "emotion",
+      "placeholder": "{{emotion}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "environment",
+      "placeholder": "{{environment}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "work_conv",
+      "placeholder": "{{work_conv}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "work_entries",
+      "placeholder": "{{work_entries}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "recalled_memories",
+      "placeholder": "{{recalled_memories}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "recent_messages",
+      "placeholder": "{{recent_messages}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "user_input",
+      "placeholder": "{{user_input}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "system_time",
+      "placeholder": "{{system_time}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "language",
+      "placeholder": "{{language}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "expressions",
+      "placeholder": "{{expressions}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "state",
+      "placeholder": "{{state}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "state_updated",
+      "placeholder": "{{state_updated}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "work_memory",
+      "placeholder": "{{work_memory}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "work_memory_updated",
+      "placeholder": "{{work_memory_updated}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "persona",
+      "placeholder": "{{persona}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "recent_diaries",
+      "placeholder": "{{recent_diaries}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "system_language",
+      "placeholder": "{{system_language}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "elapsed_minutes",
+      "placeholder": "{{elapsed_minutes}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "associate_memory",
+      "placeholder": "{{associate_memory}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "dream_sampled_messages",
+      "placeholder": "{{dream_sampled_messages}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "worker_input",
+      "placeholder": "{{worker_input}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "diary_sampled_messages",
+      "placeholder": "{{diary_sampled_messages}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "source_messages",
+      "placeholder": "{{source_messages}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "tone_recent_dialogs",
+      "placeholder": "{{tone_recent_dialogs}}",
+      "description": "Value supplied by the application at runtime."
+    },
+    {
+      "name": "message_context",
+      "placeholder": "{{message_context}}",
+      "description": "Value supplied by the application at runtime."
+    }
+  ],
+  "variableNames": [
+    "character_name",
+    "persona_immutable",
+    "persona_mutable",
+    "backgrounds",
+    "temper",
+    "trait",
+    "habit",
+    "dialogue",
+    "emotion",
+    "environment",
+    "work_conv",
+    "work_entries",
+    "recalled_memories",
+    "recent_messages",
+    "user_input",
+    "system_time",
+    "language",
+    "expressions",
+    "state",
+    "state_updated",
+    "work_memory",
+    "work_memory_updated",
+    "persona",
+    "recent_diaries",
+    "system_language",
+    "elapsed_minutes",
+    "associate_memory",
+    "dream_sampled_messages",
+    "worker_input",
+    "diary_sampled_messages",
+    "source_messages",
+    "tone_recent_dialogs",
+    "message_context"
+  ],
+  "warnings": [
+    "Enabled status describes configuration; runtime availability is checked separately."
+  ]
+}

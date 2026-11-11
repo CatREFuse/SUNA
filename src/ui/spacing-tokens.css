@@ -1,0 +1,15 @@
+/* 8px primary rhythm; 4px supplementary increments. Typography, hairlines and optical geometry are independent. */
+:root {
+  --sand-space-unit:4px;
+  --sand-space-base:8px;
+  --sand-space-1:4px;
+  --sand-space-2:8px;
+  --sand-space-3:12px;
+  --sand-space-4:16px;
+  --sand-space-5:20px;
+  --sand-space-6:24px;
+  --sand-space-8:32px;
+  --sand-space-10:40px;
+  --sand-space-12:48px;
+  --sand-space-16:64px;
+}

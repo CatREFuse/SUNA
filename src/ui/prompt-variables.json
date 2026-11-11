@@ -1,0 +1,167 @@
+{
+  "character_name": {
+    "description": "<当前角色名称>",
+    "xml": "character_name",
+    "category": "运行时变量"
+  },
+  "persona_immutable": {
+    "description": "backgrounds: {{backgrounds}}\ntemper: {{temper}}",
+    "xml": "persona_immutable",
+    "category": "运行时变量"
+  },
+  "persona_mutable": {
+    "description": "trait: {{trait}}\nhabit: {{habit}}\ndialogue: {{dialogue}}",
+    "xml": "persona_mutable",
+    "category": "运行时变量"
+  },
+  "backgrounds": {
+    "description": "<角色身份与背景>",
+    "xml": "backgrounds",
+    "category": "运行时变量"
+  },
+  "temper": {
+    "description": "<稳定的人格气质>",
+    "xml": "temper",
+    "category": "运行时变量"
+  },
+  "trait": {
+    "description": "<当前有效的人格特质>",
+    "xml": "trait",
+    "category": "运行时变量"
+  },
+  "habit": {
+    "description": "<角色习惯与长期偏好>",
+    "xml": "habit",
+    "category": "运行时变量"
+  },
+  "dialogue": {
+    "description": "<对话风格示例；仅作表达参考>",
+    "xml": "dialogue",
+    "category": "运行时变量"
+  },
+  "emotion": {
+    "description": "<当前心境描述与 PAD 数值；始终返回当前值，不受 diff 影响>",
+    "xml": "emotion",
+    "category": "静态变量"
+  },
+  "environment": {
+    "description": "<角色当前地点、活动与周围环境；始终返回当前值，不受 diff 影响>",
+    "xml": "environment",
+    "category": "静态变量"
+  },
+  "work_conv": {
+    "description": "<工作记忆的卷积摘要；始终返回当前值，不受 diff 影响>",
+    "xml": "work_conv",
+    "category": "静态变量"
+  },
+  "work_entries": {
+    "description": "<当前保留的全部实时工作记忆条目；始终返回当前值，不受 diff 影响>",
+    "xml": "work_entries",
+    "category": "静态变量"
+  },
+  "recalled_memories": {
+    "description": "<本轮长期记忆召回结果，含记忆字段、覆盖及关联关系、召回性质与等级；上下文仅第 0 级条目附证据引文。>",
+    "xml": "recalled_memories",
+    "category": "运行时变量"
+  },
+  "recent_messages": {
+    "description": "<当前角色的显式聊天记录，JSON 数组；保留角色、时间、正文及必要消息片段。>",
+    "xml": "recent_messages",
+    "category": "运行时变量"
+  },
+  "user_input": {
+    "description": "<触发本次运行的用户输入或业务事件内容>",
+    "xml": "user_input",
+    "category": "运行时变量"
+  },
+  "system_time": {
+    "description": "<当前日期、时间与时区>",
+    "xml": "system_time",
+    "category": "运行时变量"
+  },
+  "language": {
+    "description": "<本次角色消息使用的目标语言>",
+    "xml": "language",
+    "category": "运行时变量"
+  },
+  "expressions": {
+    "description": "<当前角色可用的表情 Key 与含义>",
+    "xml": "expressions",
+    "category": "运行时变量"
+  },
+  "state": {
+    "description": "environment: {{environment}}\nemotion: {{emotion}}\n<当前完整状态；每次均可取值，不受 diff 影响>",
+    "xml": "state",
+    "category": "静态变量"
+  },
+  "state_updated": {
+    "description": "{{state}}\n<状态有更新时返回当前完整状态；无更新时为空字符串>",
+    "xml": "state_updated",
+    "category": "动态变量"
+  },
+  "work_memory": {
+    "description": "convolution: {{work_conv}}\nin_time: {{work_entries}}\n<当前完整工作记忆；每次均可取值，不受 diff 影响>",
+    "xml": "work_memory",
+    "category": "静态变量"
+  },
+  "work_memory_updated": {
+    "description": "{{work_memory}}\n<工作记忆有更新时返回当前完整工作记忆；无更新时为空字符串>",
+    "xml": "work_memory_updated",
+    "category": "动态变量"
+  },
+  "persona": {
+    "description": "<完整 persona.json；用于 dream、persona_dream、memory_dream。>",
+    "xml": "persona",
+    "category": "Worker 输入变量"
+  },
+  "recent_diaries": {
+    "description": "<目标日期之前最近最多 5 篇日记；供 diary 参考生活脉络与延续。>",
+    "xml": "recent_diaries",
+    "category": "Worker 输入变量"
+  },
+  "system_language": {
+    "description": "<日记生成使用的有效系统语言；与角色消息 language 分开。>",
+    "xml": "system_language",
+    "category": "Worker 输入变量"
+  },
+  "elapsed_minutes": {
+    "description": "<距上次心境更新经过的分钟数；供 emotion_update 使用。>",
+    "xml": "elapsed_minutes",
+    "category": "Worker 输入变量"
+  },
+  "associate_memory": {
+    "description": "长期记忆召回结果，供梦境和日记 Worker 使用；无匹配记忆时为 []。",
+    "xml": "associate_memory",
+    "category": "Worker 输出变量"
+  },
+  "dream_sampled_messages": {
+    "description": "梦境间对话采样：相邻两次梦境之间随机抽取的最多 20 轮完整显式对话。",
+    "xml": "dream_sampled_messages",
+    "category": "Worker 输入变量"
+  },
+  "worker_input": {
+    "description": "传入当前 Worker 的参数值；对象或数组以 JSON 文本注入，字符串按原文注入。",
+    "xml": "worker_input",
+    "category": "Worker 输入变量"
+  },
+  "diary_sampled_messages": {
+    "description": "日记间对话采样：上次日记至本次目标日记时间之间均匀采样的最多 20 轮完整显式对话。",
+    "xml": "diary_sampled_messages",
+    "category": "Worker 输入变量"
+  },
+  "source_messages": {
+    "description": "本批可核验的原始消息列表，包含来源 ID、说话者身份及完整原文。",
+    "xml": "source_messages",
+    "category": "Worker变量"
+  },
+  "tone_recent_dialogs": {
+    "description": "当前角色的近期显式对话，紧凑 JSON 数组；仅保留文本和图片 alt。",
+    "xml": null,
+    "category": "Worker 输入变量"
+  },
+  "message_context": {
+    "description": "当前渠道、会话、发送者与参与者信息",
+    "xml": "message_context",
+    "category": "沙之书兼容变量"
+  }
+}

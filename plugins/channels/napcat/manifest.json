@@ -1,0 +1,86 @@
+{
+  "id": "suna-napcat",
+  "name": "NapCat · QQ",
+  "version": "0.3.9",
+  "apiVersion": 1,
+  "kind": "channel",
+  "protocol": "onebot-11",
+  "entry": "index.mjs",
+  "platform": "qq",
+  "description": "连接 NapCat 的 OneBot 11，或复用现有 WebUI 动作接口；登录二维码由插件获取。",
+  "capabilities": [
+    "private",
+    "group",
+    "login-qr",
+    "webhook",
+    "websocket"
+  ],
+  "configSchema": {
+    "transport": {
+      "type": "select",
+      "label": "连接方式",
+      "default": "http",
+      "options": [
+        {
+          "value": "http",
+          "label": "OneBot HTTP + 事件接收"
+        },
+        {
+          "value": "webui-action",
+          "label": "复用 NapCat WebUI"
+        }
+      ],
+      "required": true
+    },
+    "httpUrl": {
+      "type": "string",
+      "label": "OneBot HTTP 地址（http 模式）",
+      "default": "http://127.0.0.1:3000"
+    },
+    "expectedSelfId": {
+      "type": "string",
+      "label": "预期 QQ 账号（WebUI 模式，可选）"
+    },
+    "eventUrl": {
+      "type": "string",
+      "label": "OneBot WebSocket 地址",
+      "default": "ws://127.0.0.1:3001"
+    },
+    "accessToken": {
+      "type": "secret",
+      "label": "OneBot Access Token"
+    },
+    "webhookToken": {
+      "type": "secret",
+      "label": "HTTP 事件上报 Token（不用 WebSocket 时）"
+    },
+    "webuiUrl": {
+      "type": "string",
+      "label": "NapCat WebUI 地址",
+      "default": "http://127.0.0.1:6099"
+    },
+    "webuiToken": {
+      "type": "secret",
+      "label": "NapCat WebUI Token"
+    },
+    "receiveEvents": {
+      "type": "boolean",
+      "label": "接收 WebUI 消息事件",
+      "default": false
+    },
+    "autoReply": {
+      "type": "boolean",
+      "label": "自动回复渠道消息",
+      "default": true
+    }
+  },
+  "ui": {
+    "entry": "ui.html"
+  },
+  "administratorProtocol": {
+    "version": 1,
+    "field": "administratorUid",
+    "scope": "character-account",
+    "managedBy": "host"
+  }
+}

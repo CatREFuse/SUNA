@@ -1,0 +1,7 @@
+/* Imported with Vue scoped styles; retain keyboard-only focus appearance. */
+@import './control-tokens.css';
+summary{list-style:none}summary::-webkit-details-marker{display:none}
+.disclosure-arrow{display:inline-block;vertical-align:middle;margin-left:8px;transition:transform 120ms ease}
+details[open]>summary>.disclosure-arrow{transform:rotate(180deg)}
+input[type=number]{appearance:textfield}input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{appearance:none;margin:0}
+@media(prefers-reduced-motion:reduce){.disclosure-arrow{transition:none}}

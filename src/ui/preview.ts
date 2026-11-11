@@ -1,0 +1,6 @@
+import type {Snapshot} from './types'
+export const preview:Snapshot={
+characters:[{id:'sample-role-1',name:'角色 A',role:'assistant',persona:'',avatar:'A',avatarUrl:'/mockup/avatars/sample-1.jpg',color:'#64748b',version:1,state:{emotion:''}},{id:'sample-role-2',name:'角色 B',role:'assistant',persona:'',avatar:'B',avatarUrl:'/mockup/avatars/sample-2.jpg',color:'#7c6f91',version:1,state:{emotion:''}}],
+conversations:[{id:'sample-direct',title:'单聊示例',kind:'direct',participantIds:['sample-role-1'],channel:'desktop',lastMessage:'此处显示最近一条消息。',lastMessageAt:'2026-01-01T00:00:00Z',scheduler:{enabled:false},version:1},{id:'sample-group',title:'群聊示例',kind:'group',participantIds:['sample-role-1','sample-role-2'],channel:'desktop',lastMessage:'群聊示例消息。',lastMessageAt:'2026-01-01T00:00:00Z',scheduler:{enabled:false},version:1}],
+messages:[{id:'sample-message-1',conversationId:'sample-direct',text:'你好。',role:'user',sender:{id:'sample-user',name:'用户',type:'human'},createdAt:'2026-01-01T00:00:00Z',status:'delivered'},{id:'sample-message-2',conversationId:'sample-direct',text:'你好，有什么需要？',role:'assistant',sender:{id:'sample-role-1',name:'角色 A',type:'character'},createdAt:'2026-01-01T00:00:01Z',status:'delivered'}],
+prompts:[],settings:{developerMode:false,theme:'dark',petEnabled:false},activity:[]}

@@ -1,0 +1,4 @@
+import {displayProductVersion,parseProductVersion} from '../src/shared/product-version.mjs';
+export function productVersionBuildStamp(pkg){parseProductVersion(pkg.version);return {schemaVersion:1,version:pkg.version,versionDisplay:displayProductVersion(pkg.version)};}
+export function assertProductVersionBuildStamp(stamp,pkg){const expected=productVersionBuildStamp(pkg);if(!stamp||stamp.schemaVersion!==1||stamp.version!==expected.version||stamp.versionDisplay!==expected.versionDisplay)throw Error('PRODUCT_BUILD_VERSION_MISMATCH: rebuild UI after version finalization');return expected;}
+export function productVersionBuildPlugin(pkg){const stamp=productVersionBuildStamp(pkg);return {name:'suna-product-version-stamp',apply:'build',generateBundle(){this.emitFile({type:'asset',fileName:'product-version.json',source:JSON.stringify(stamp,null,2)+'\n'});}};}

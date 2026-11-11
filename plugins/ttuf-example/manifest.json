@@ -1,0 +1,18 @@
+{
+  "id":"suna-ttuf-example",
+  "name":"TTUF 示例",
+  "version":"0.1.0",
+  "kind":"ttuf",
+  "runtime":"node",
+  "apiVersion":1,
+  "entry":"index.mjs",
+  "capabilities":["runtime.ttm","channel.send"],
+  "configSchema":{
+    "destination":{"type":"select","label":"发送目标","required":true,"default":"runtime","options":[{"label":"Runtime","value":"runtime"},{"label":"Channel","value":"channel"}]},
+    "characterId":{"type":"character","label":"角色","required":true},
+    "conversationId":{"type":"conversation","label":"会话","required":true},
+    "mode":{"type":"select","label":"插入方式","required":true,"default":"queue","options":["steer","queue"]},
+    "content":{"type":"textarea","label":"内容","required":true},
+    "deliveryId":{"type":"text","label":"消息标识","required":true}
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "kind": "client",
+  "apiVersion": 1,
+  "id": "suna-dsh-plugins",
+  "name": "DSH 插件",
+  "version": "0.1.0",
+  "capabilities": [
+    "dsh.plugins.manage"
+  ],
+  "configSchema": {},
+  "ui": {
+    "entry": "ui.html"
+  },
+  "files": {
+    "ui.html": "f0162fafb3805c9d5aa6d18a29e0dbd29b7537588b5024bc75f0beb2f56f8dc2"
+  }
+}

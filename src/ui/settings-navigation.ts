@@ -1,0 +1,2 @@
+export const settingsPages=[{id:'appearance',label:'外观',icon:'sun'},{id:'model',label:'模型服务',icon:'model'},{id:'model-scheduling',label:'模型调度',icon:'worker'},{id:'search',label:'搜索与读取',icon:'search'},{id:'runtime',label:'DSH 运行时',icon:'terminal'},{id:'background',label:'后台任务',icon:'history'},{id:'group',label:'群聊',icon:'people'},{id:'prompts',label:'系统提示词',icon:'pen'},{id:'developer',label:'开发者模式',icon:'code'}] as const
+export type SettingsPageId=typeof settingsPages[number]['id']

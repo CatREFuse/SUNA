@@ -1,0 +1,17 @@
+node_modules/
+dist/
+release/
+runtime/
+.cache/
+.data/
+.local/
+.suna-dev/
+.qa/
+.package-stage/
+*.log
+.DS_Store
+._*
+public/vendor/live2d/live2dcubismcore.min.js
+desktop/native-window-controls-*.node
+desktop/native-window-controls-build-*.json
+desktop/native-window-controls-smoke.cjs
